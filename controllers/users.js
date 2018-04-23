@@ -7,13 +7,17 @@ usersRouter.get('/', async(request, response) => {
     response.json(users.map(User.format))
 })
 
-usersRouter.post('/', async(request, response) => {
+usersRouter.post('/register', async(request, response) => {
     const body = request.body
     const password1 = body.password1
     const password2 = body.password2
     const email = body.email
     const username = body.username
+    const name = body.name
 
+    if(username.length === 0 || name.length === 0){
+        return response.status(400).json({ error: "name and/or username is missing"})
+    }
     if(password1 !== password2){
         return response.status(400).json({error: "passwords don't match"})
     }
@@ -36,9 +40,10 @@ usersRouter.post('/', async(request, response) => {
             passwordHash,
             admin: false // TODO: pääkäyttäjä voi antaa adminoikeudet
         })
-        debugger
         const savedUser = await user.save()
-        response.json(User.format(savedUser))
+
+        const registeredUser = await User.findById(savedUser._id)
+        response.json(User.format(registeredUser))
     } catch (exception) {
         console.log(exception)
         response.status(500).json({error: 'something went wrong...'})
