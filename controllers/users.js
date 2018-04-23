@@ -9,21 +9,26 @@ usersRouter.get('/', async(request, response) => {
 
 usersRouter.post('/', async(request, response) => {
     const body = request.body
-    const password = body.password
+    const password1 = body.password1
+    const password2 = body.password2
     const email = body.email
     const username = body.username
+
+    if(password1 !== password2){
+        return response.status(400).json({error: "passwords don't match"})
+    }
     // password requirements
-    if (password.length < 5) {
+    if (password1.length < 5) {
         return response.status(400).json({error: 'password too short'})
     }
     // username validation const isUnique = await isUniqueUser(username) parempi
     const existingUser = await User.find({username})
-    if (existingUser.length > 0) {
+    if (existingUser != null && existingUser.length > 0) {
         return response.status(400).json({error: 'username exists'})
     }
     try {
         const saltRounds = 10
-        const passwordHash = await bcrypt.hash(password, saltRounds)
+        const passwordHash = await bcrypt.hash(password1, saltRounds)
         const user = new User({
             username,
             name: body.name,
