@@ -15,8 +15,12 @@ customersRouter.post('/', async(request, response) => {
     const body = request.body
 
     // todo: loput validoinnit
-    if (body.firstname === undefined || body.lastname === undefined) {
-        response.status(400).json({error: 'Nimitiedot puutteelliset'})
+    if (!body.firstname || body.firstname.length === 0 || 
+        !body.lastname  || body.lastname.length === 0) {
+        return response.status(400).json({error: 'Nimitiedot puutteelliset'})
+    }
+    if(body.email.length === 0 || body.telephone.length === 0){
+        return response.status(400).json({error: 'Yhteystiedot putteelliset'})
     }
 
     const customer = new Customer({
