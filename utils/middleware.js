@@ -21,7 +21,8 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const error = (request, response) => {
-    response.status(404).send({error: 'unknown endpoint'})
+    response.redirect(301, '../login');
+    //response.status(404).send({error: ''})
 }
 
 module.exports = {
