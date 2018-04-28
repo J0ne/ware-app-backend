@@ -21,7 +21,7 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const error = (request, response) => {
-    response.redirect(301, '../login');
+    response.redirect(301, '../');
     //response.status(404).send({error: ''})
 }
 
